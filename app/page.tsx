@@ -21,7 +21,7 @@ export default function Landing() {
       {/* HERO */}
       <section className="max-w-4xl mx-auto px-6 py-24 text-center">
         <div className="inline-block bg-indigo-900/30 border border-indigo-500/30 rounded-full px-4 py-1.5 text-xs text-indigo-300 font-medium mb-6">
-          ✨ 5 prompts gratuits à l'inscription — aucune carte requise
+          ✨ 2 prompts gratuits à l'inscription — aucune carte requise
         </div>
         <h1 className="text-5xl font-extrabold text-white leading-tight mb-6">
           Créez des prompts IA<br />
@@ -42,7 +42,7 @@ export default function Landing() {
             J'ai déjà un compte
           </Link>
         </div>
-        <p className="text-xs text-slate-600 mt-4">5 prompts gratuits · Pas de carte bancaire · Résultats immédiats</p>
+        <p className="text-xs text-slate-600 mt-4">2 prompts gratuits · Pas de carte bancaire · Résultats immédiats</p>
       </section>
 
       {/* FEATURES */}
@@ -96,7 +96,7 @@ export default function Landing() {
             <p className="text-4xl font-extrabold text-white mb-1">Gratuit</p>
             <p className="text-slate-500 text-sm mb-6">Pour toujours</p>
             <ul className="space-y-2 text-sm text-slate-300 text-left mb-8">
-              {['5 prompts offerts à l\'inscription', 'Wizard guidé complet', 'Améliorateur + Testeur', '15 templates inclus'].map(f => (
+              {['2 prompts offerts à l\'inscription', 'Wizard guidé complet', 'Améliorateur + Testeur', '15 templates inclus'].map(f => (
                 <li key={f} className="flex items-center gap-2"><span className="text-green-400">✓</span>{f}</li>
               ))}
             </ul>

@@ -40,7 +40,7 @@ export default function Register() {
           <h1 className="text-2xl font-bold text-white mb-3">Vérifiez votre email</h1>
           <p className="text-slate-400 mb-2">Un lien de confirmation a été envoyé à</p>
           <p className="text-white font-semibold mb-6">{email}</p>
-          <p className="text-slate-500 text-sm mb-8">Cliquez sur le lien dans l'email pour activer votre compte et recevoir vos 5 crédits gratuits.</p>
+          <p className="text-slate-500 text-sm mb-8">Cliquez sur le lien dans l'email pour activer votre compte et recevoir vos 2 crédits gratuits.</p>
           <p className="text-xs text-slate-600">Pas reçu ? Vérifiez vos spams ou{' '}
             <button onClick={() => setEmailSent(false)} className="text-indigo-400 hover:text-indigo-300 underline">
               réessayez
@@ -60,13 +60,13 @@ export default function Register() {
             <span className="font-bold text-white">PromptBuilder <span className="text-indigo-400">Pro</span></span>
           </Link>
           <h1 className="text-2xl font-bold text-white">Créer un compte</h1>
-          <p className="text-slate-400 text-sm mt-1">5 prompts gratuits — aucune carte requise</p>
+          <p className="text-slate-400 text-sm mt-1">2 prompts gratuits — aucune carte requise</p>
         </div>
 
         <form onSubmit={handleSubmit} className="bg-slate-900 border border-slate-700 rounded-2xl p-6 space-y-4">
           {error && <div className="bg-red-950/50 border border-red-500/50 text-red-300 text-sm rounded-lg px-4 py-3">{error}</div>}
           <div className="bg-indigo-950/30 border border-indigo-500/20 rounded-lg px-4 py-3 text-xs text-indigo-300">
-            🎁 5 prompts offerts à l'inscription pour tester sans risque
+            🎁 2 prompts offerts à l'inscription pour tester sans risque
           </div>
           <div>
             <label className="block text-xs text-slate-400 mb-1.5">Email</label>

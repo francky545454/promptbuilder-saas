@@ -5,7 +5,7 @@
 create table if not exists public.profiles (
   id           uuid primary key references auth.users(id) on delete cascade,
   email        text,
-  credits      integer not null default 5,
+  credits      integer not null default 2,
   total_purchased integer not null default 0,
   created_at   timestamptz default now()
 );
@@ -65,7 +65,7 @@ create or replace function public.handle_new_user()
 returns trigger language plpgsql security definer as $$
 begin
   insert into public.profiles (id, email, credits, total_purchased)
-  values (new.id, new.email, 5, 0);
+  values (new.id, new.email, 2, 0);
   return new;
 end;
 $$;
