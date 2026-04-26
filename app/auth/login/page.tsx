@@ -1,7 +1,8 @@
 'use client'
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
+import HCaptcha from '@hcaptcha/react-hcaptcha'
 import Link from 'next/link'
 
 export default function Login() {
@@ -9,16 +10,29 @@ export default function Login() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [captchaToken, setCaptchaToken] = useState('')
+  const captchaRef = useRef<HCaptcha>(null)
   const router = useRouter()
   const supabase = createClient()
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
+    if (!captchaToken) { setError('Veuillez compléter la vérification anti-robot'); return }
     setLoading(true)
     setError('')
-    const { error } = await supabase.auth.signInWithPassword({ email, password })
-    if (error) { setError(error.message); setLoading(false) }
-    else router.push('/dashboard')
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+      options: { captchaToken }
+    })
+    if (error) {
+      setError(error.message)
+      setLoading(false)
+      captchaRef.current?.resetCaptcha()
+      setCaptchaToken('')
+    } else {
+      router.push('/dashboard')
+    }
   }
 
   return (
@@ -45,7 +59,16 @@ export default function Login() {
             <input type="password" value={password} onChange={e => setPassword(e.target.value)} required
               className="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2.5 text-slate-100 text-sm placeholder-slate-600 focus:ring-1 focus:ring-indigo-500 focus:outline-none"/>
           </div>
-          <button type="submit" disabled={loading}
+          <div className="flex justify-center">
+            <HCaptcha
+              sitekey="2dd0b74a-6e92-4820-a454-2a92a40af2b2"
+              onVerify={setCaptchaToken}
+              onExpire={() => setCaptchaToken('')}
+              ref={captchaRef}
+              theme="dark"
+            />
+          </div>
+          <button type="submit" disabled={loading || !captchaToken}
             className="w-full bg-indigo-600 hover:bg-indigo-500 disabled:bg-slate-700 disabled:text-slate-500 text-white font-semibold py-3 rounded-xl transition-colors">
             {loading ? 'Connexion...' : 'Se connecter'}
           </button>
