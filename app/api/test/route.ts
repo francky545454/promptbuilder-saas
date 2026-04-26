@@ -17,18 +17,19 @@ export async function POST(req: Request) {
   if (!message?.trim()) return NextResponse.json({ error: 'Message vide' }, { status: 400 })
 
   try {
-    const kwargs: Parameters<typeof anthropic.messages.create>[0] = {
-      model, max_tokens: 4096,
+    const resp = await anthropic.messages.create({
+      model,
+      max_tokens: 4096,
+      system: system || undefined,
       messages: [{ role: 'user', content: message }]
-    }
-    if (system) kwargs.system = system
+    })
 
-    const resp = await anthropic.messages.create(kwargs)
+    const text = resp.content[0].type === 'text' ? resp.content[0].text : ''
 
     await supabase.from('profiles').update({ credits: profile.credits - 1 }).eq('id', user.id)
 
     return NextResponse.json({
-      response: (resp.content[0] as { text: string }).text,
+      response: text,
       usage: { input: resp.usage.input_tokens, output: resp.usage.output_tokens }
     })
   } catch (e: unknown) {
