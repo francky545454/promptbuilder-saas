@@ -55,6 +55,19 @@ Format JSON STRICT (rien d'autre) :
   "conseil": "<1 conseil concret>"
 }`
 
+export function getAnthropicErrorMessage(e: unknown): string {
+  const msg = String(e)
+  if (msg.includes('rate_limit_error') || msg.includes('429'))
+    return 'Trop de requêtes simultanées. Patientez quelques secondes et réessayez.'
+  if (msg.includes('overloaded_error') || msg.includes('529'))
+    return 'Le service IA est temporairement surchargé. Réessayez dans quelques instants.'
+  if (msg.includes('invalid_api_key') || msg.includes('authentication'))
+    return 'Erreur de configuration du service. Contactez le support.'
+  if (msg.includes('context_length') || msg.includes('max_tokens'))
+    return 'Votre prompt est trop long. Réduisez le contexte ou l\'exemple et réessayez.'
+  return 'Une erreur est survenue. Réessayez dans quelques instants.'
+}
+
 export function parseJSON(text: string) {
   let t = text.trim()
   if (t.startsWith('```')) {

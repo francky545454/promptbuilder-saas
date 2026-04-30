@@ -1,5 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
-import { anthropic, IMPROVE_SYSTEM_PROMPT, parseJSON } from '@/lib/anthropic'
+import { anthropic, IMPROVE_SYSTEM_PROMPT, parseJSON, getAnthropicErrorMessage } from '@/lib/anthropic'
 import { NextResponse } from 'next/server'
 
 export async function POST(req: Request) {
@@ -40,6 +40,6 @@ export async function POST(req: Request) {
     return NextResponse.json(result)
   } catch (e: unknown) {
     if (text) return NextResponse.json({ error: 'Réponse non JSON', raw: text.slice(0, 200) }, { status: 500 })
-    return NextResponse.json({ error: String(e) }, { status: 500 })
+    return NextResponse.json({ error: getAnthropicErrorMessage(e) }, { status: 500 })
   }
 }

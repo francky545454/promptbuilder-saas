@@ -1,5 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
-import { anthropic } from '@/lib/anthropic'
+import { anthropic, getAnthropicErrorMessage } from '@/lib/anthropic'
 import { NextResponse } from 'next/server'
 
 export async function POST(req: Request) {
@@ -33,6 +33,6 @@ export async function POST(req: Request) {
       usage: { input: resp.usage.input_tokens, output: resp.usage.output_tokens }
     })
   } catch (e: unknown) {
-    return NextResponse.json({ error: String(e) }, { status: 500 })
+    return NextResponse.json({ error: getAnthropicErrorMessage(e) }, { status: 500 })
   }
 }
