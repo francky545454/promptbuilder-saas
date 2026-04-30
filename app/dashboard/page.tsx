@@ -110,6 +110,34 @@ function Chip({ label, active, onClick }: { label: string; active: boolean; onCl
   )
 }
 
+function FileUploadBtn({ onLoad, label = '📎 Charger un fichier' }: {
+  onLoad: (content: string, filename: string) => void
+  label?: string
+}) {
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    const reader = new FileReader()
+    reader.onload = ev => {
+      let content = ev.target?.result as string
+      if (file.name.match(/\.html?$/i)) {
+        const tmp = document.createElement('div')
+        tmp.innerHTML = content
+        content = tmp.textContent || tmp.innerText || content
+      }
+      onLoad(content.trim(), file.name)
+    }
+    reader.readAsText(file)
+    e.target.value = ''
+  }
+  return (
+    <label className="cursor-pointer text-xs px-3 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-400 hover:text-slate-200 rounded-lg transition-colors flex items-center gap-1.5 w-fit">
+      {label}
+      <input type="file" accept=".txt,.html,.htm,.md,.csv" onChange={handleChange} className="hidden" />
+    </label>
+  )
+}
+
 export default function Dashboard() {
   const router = useRouter()
   const supabase = createClient()
@@ -409,6 +437,9 @@ export default function Dashboard() {
                   {/* Step 5: Example (optional) */}
                   {wStep === 5 && (
                     <div className="space-y-3">
+                      <div className="flex justify-end">
+                        <FileUploadBtn onLoad={(content) => setWAnswers(a => ({ ...a, example: content }))} label="📎 Charger depuis un fichier" />
+                      </div>
                       <textarea value={wAnswers.example} onChange={e => setWAnswers(a => ({ ...a, example: e.target.value }))}
                         placeholder="Ex: Entrée : [texte client]\nSortie attendue : [résumé en 3 points]..."
                         rows={5} className="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-slate-100 text-sm placeholder-slate-600 focus:ring-1 focus:ring-indigo-500 focus:outline-none resize-none" />
@@ -431,6 +462,9 @@ export default function Dashboard() {
                   {/* Step 7: Context (optional) */}
                   {wStep === 7 && (
                     <div className="space-y-3">
+                      <div className="flex justify-end">
+                        <FileUploadBtn onLoad={(content) => setWAnswers(a => ({ ...a, context: content }))} label="📎 Charger depuis un fichier" />
+                      </div>
                       <textarea value={wAnswers.context} onChange={e => setWAnswers(a => ({ ...a, context: e.target.value }))}
                         placeholder="Secteur d'activité, outil utilisé, contraintes techniques, public spécifique..."
                         rows={5} className="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-slate-100 text-sm placeholder-slate-600 focus:ring-1 focus:ring-indigo-500 focus:outline-none resize-none" />
@@ -569,6 +603,10 @@ export default function Dashboard() {
               <h2 className="text-lg font-bold text-white mb-1">Améliorer un prompt existant</h2>
               <p className="text-slate-400 text-sm mb-5">Collez votre prompt — l'IA l'analyse, le score, et vous livre une version optimisée</p>
 
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs text-slate-500">Collez votre prompt ou chargez un fichier</span>
+                <FileUploadBtn onLoad={(content, name) => setIPrompt(content)} label="📎 Charger un fichier" />
+              </div>
               <textarea value={iPrompt} onChange={e => setIPrompt(e.target.value)}
                 placeholder="Collez ici votre prompt à améliorer..."
                 rows={6} className="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-slate-100 text-sm placeholder-slate-600 focus:ring-1 focus:ring-indigo-500 focus:outline-none resize-none mb-4" />
@@ -700,13 +738,19 @@ export default function Dashboard() {
 
               <div className="space-y-3 mb-4">
                 <div>
-                  <label className="block text-xs text-slate-400 mb-1.5">System prompt <span className="text-slate-600">(optionnel)</span></label>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <label className="text-xs text-slate-400">System prompt <span className="text-slate-600">(optionnel)</span></label>
+                    <FileUploadBtn onLoad={(content) => setTSystem(content)} label="📎 Fichier" />
+                  </div>
                   <textarea value={tSystem} onChange={e => setTSystem(e.target.value)}
                     placeholder="Instructions système pour l'IA (rôle, comportement global)..."
                     rows={3} className="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-slate-100 text-sm placeholder-slate-600 focus:ring-1 focus:ring-indigo-500 focus:outline-none resize-none" />
                 </div>
                 <div>
-                  <label className="block text-xs text-slate-400 mb-1.5">Votre prompt</label>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <label className="text-xs text-slate-400">Votre prompt</label>
+                    <FileUploadBtn onLoad={(content) => setTMessage(content)} label="📎 Fichier" />
+                  </div>
                   <textarea value={tMessage} onChange={e => setTMessage(e.target.value)}
                     placeholder="Entrez ou collez votre prompt ici..."
                     rows={6} className="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-slate-100 text-sm placeholder-slate-600 focus:ring-1 focus:ring-indigo-500 focus:outline-none resize-none" />
@@ -748,6 +792,11 @@ export default function Dashboard() {
             <div className="mb-6">
               <h2 className="text-lg font-bold text-white mb-1">Templates prêts à l'emploi</h2>
               <p className="text-slate-400 text-sm">15 templates optimisés par des experts en prompt engineering. Copiez et personnalisez.</p>
+              <div className="mt-4 bg-slate-900 border border-slate-700 rounded-xl p-4 flex items-center gap-4">
+                <span className="text-sm text-slate-400">📎 Charger un fichier pour le tester ou l'améliorer :</span>
+                <FileUploadBtn onLoad={(content) => { setTMessage(content); setTab('test') }} label="Tester un fichier" />
+                <FileUploadBtn onLoad={(content) => { setIPrompt(content); setTab('improve') }} label="Améliorer un fichier" />
+              </div>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {TEMPLATES.map((t, i) => (
