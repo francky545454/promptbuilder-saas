@@ -373,9 +373,15 @@ export default function Dashboard() {
 
                   {/* Step 0: Goal */}
                   {wStep === 0 && (
-                    <textarea value={wAnswers.goal} onChange={e => setWAnswers(a => ({ ...a, goal: e.target.value }))}
-                      placeholder="Ex: Analyser des contrats, rédiger des emails de prospection, générer des idées de contenu..."
-                      rows={4} className="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-slate-100 text-sm placeholder-slate-600 focus:ring-1 focus:ring-indigo-500 focus:outline-none resize-none" />
+                    <div className="space-y-2">
+                      <div className="flex justify-end">
+                        <FileUploadBtn onLoad={(content) => setWAnswers(a => ({ ...a, goal: content }))} label="📎 Charger un document" />
+                      </div>
+                      <textarea value={wAnswers.goal} onChange={e => setWAnswers(a => ({ ...a, goal: e.target.value }))}
+                        placeholder="Ex: Analyser des contrats, rédiger des emails de prospection, générer des idées de contenu..."
+                        rows={4} className="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-slate-100 text-sm placeholder-slate-600 focus:ring-1 focus:ring-indigo-500 focus:outline-none resize-none" />
+                      <p className="text-xs text-slate-500">💡 Le document doit décrire votre besoin ou projet</p>
+                    </div>
                   )}
 
                   {/* Step 1: Role */}
@@ -390,6 +396,10 @@ export default function Dashboard() {
                       <input value={wAnswers.role} onChange={e => setWAnswers(a => ({ ...a, role: e.target.value }))}
                         placeholder="Ou saisissez un rôle personnalisé..."
                         className="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-slate-100 text-sm placeholder-slate-600 focus:ring-1 focus:ring-indigo-500 focus:outline-none" />
+                      <div className="flex items-center justify-between">
+                        <p className="text-xs text-slate-500">💡 Le document doit décrire le rôle ou la fiche de poste</p>
+                        <FileUploadBtn onLoad={(content) => setWAnswers(a => ({ ...a, role: content.split('\n')[0].slice(0, 100) }))} label="📎 Charger une fiche de poste" />
+                      </div>
                     </div>
                   )}
 
@@ -431,14 +441,19 @@ export default function Dashboard() {
                         onChange={e => setWAnswers(a => ({ ...a, constraintNote: e.target.value }))}
                         placeholder="Autre contrainte spécifique..."
                         className="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-slate-100 text-sm placeholder-slate-600 focus:ring-1 focus:ring-indigo-500 focus:outline-none" />
+                      <div className="flex items-center justify-between">
+                        <p className="text-xs text-slate-500">💡 Le document doit lister des règles ou contraintes à respecter</p>
+                        <FileUploadBtn onLoad={(content) => setWAnswers(a => ({ ...a, constraintNote: content }))} label="📎 Charger des contraintes" />
+                      </div>
                     </div>
                   )}
 
                   {/* Step 5: Example (optional) */}
                   {wStep === 5 && (
                     <div className="space-y-3">
-                      <div className="flex justify-end">
-                        <FileUploadBtn onLoad={(content) => setWAnswers(a => ({ ...a, example: content }))} label="📎 Charger depuis un fichier" />
+                      <div className="flex items-center justify-between">
+                        <p className="text-xs text-slate-500">💡 Le document doit être un exemple de résultat attendu</p>
+                        <FileUploadBtn onLoad={(content) => setWAnswers(a => ({ ...a, example: content }))} label="📎 Charger un exemple" />
                       </div>
                       <textarea value={wAnswers.example} onChange={e => setWAnswers(a => ({ ...a, example: e.target.value }))}
                         placeholder="Ex: Entrée : [texte client]\nSortie attendue : [résumé en 3 points]..."
@@ -462,8 +477,9 @@ export default function Dashboard() {
                   {/* Step 7: Context (optional) */}
                   {wStep === 7 && (
                     <div className="space-y-3">
-                      <div className="flex justify-end">
-                        <FileUploadBtn onLoad={(content) => setWAnswers(a => ({ ...a, context: content }))} label="📎 Charger depuis un fichier" />
+                      <div className="flex items-center justify-between">
+                        <p className="text-xs text-slate-500">💡 Le document doit fournir le contexte du projet (cahier des charges, notes...)</p>
+                        <FileUploadBtn onLoad={(content) => setWAnswers(a => ({ ...a, context: content }))} label="📎 Charger un document" />
                       </div>
                       <textarea value={wAnswers.context} onChange={e => setWAnswers(a => ({ ...a, context: e.target.value }))}
                         placeholder="Secteur d'activité, outil utilisé, contraintes techniques, public spécifique..."
