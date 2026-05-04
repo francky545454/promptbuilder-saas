@@ -68,6 +68,11 @@ export default function Login() {
               theme="dark"
             />
           </div>
+          <div className="text-right">
+            <Link href="/auth/reset-password" className="text-xs text-slate-500 hover:text-indigo-400 transition-colors">
+              Mot de passe oublié ?
+            </Link>
+          </div>
           <button type="submit" disabled={loading || !captchaToken}
             className="w-full bg-indigo-600 hover:bg-indigo-500 disabled:bg-slate-700 disabled:text-slate-500 text-white font-semibold py-3 rounded-xl transition-colors">
             {loading ? 'Connexion...' : 'Se connecter'}
