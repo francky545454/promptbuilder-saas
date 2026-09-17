@@ -21,7 +21,12 @@ export async function middleware(request: NextRequest) {
     }
   )
 
-  const { data: { user } } = await supabase.auth.getUser()
+  const { data: { user } } = await Promise.race([
+    supabase.auth.getUser(),
+    new Promise<{ data: { user: null } }>((resolve) =>
+      setTimeout(() => resolve({ data: { user: null } }), 3000)
+    )
+  ])
   const path = request.nextUrl.pathname
   const isProtected = path.startsWith('/dashboard') || path.startsWith('/buy')
   const isAuth = path.startsWith('/auth')
